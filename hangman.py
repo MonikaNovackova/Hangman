@@ -73,7 +73,7 @@ def GameRound(no_attempts,word_to_show,word_to_guess,indecies_of_letters_to_show
     return(new_word_and_indecies)
 
 
-def start_game_loop():
+def game_loop():
     picked_word = PickWord(ChristmasWords)
     word_to_guess=picked_word[0]
     indecies_of_letters_to_show = picked_word[1]
@@ -93,7 +93,7 @@ def start_game_loop():
 
 def main_loop():
     show_intro_text()
-    start_game_loop()
+    game_loop()
 
 if __name__ == "__main__":
     main_loop()
