@@ -1,7 +1,7 @@
 import random
-from listOfWords import ChristmasWords
+from listOfWords import general_words
 
-def CheckLetter(aword,aletter):
+def finding_indecies_to_replace(aword,aletter):
     return [counter for counter, value in enumerate(aword) if (value.upper()==aletter.upper())]
 
 def ReplaceLetter(word1,word2,indecies):
@@ -20,8 +20,8 @@ def PickWord(list_of_words):
     indecies_letters_to_show=[]
     indecies_letters_to_show.append(random.randint(0,length-2))
     indecies_letters_to_show.append(random.randint(indecies_letters_to_show[0]+1,length-1))
-    thepickedword =[list_of_words[i1], indecies_letters_to_show]
-    return(thepickedword)
+
+    return list_of_words[i1], indecies_letters_to_show
 #------------------------------------------------------------------------------------------------------------------------------------------------------
 
 def show_intro_text():
@@ -39,19 +39,13 @@ def create_word_to_show(answer, guesses):
     """
     Takes the full correct word, and the valid guesses and generates a asterisk populated string1
     """
-
     length=len(answer)
-    wordguessed=length* '*'
-    listch=[]
-    for counter,value in enumerate(wordguessed):
-        if counter == guesses[0]:
-            listch.append(answer[guesses[0]])
-        elif counter == (guesses[1]):
-            listch.append(answer[guesses[1]])
-        else:
-            listch.append(value)
-    wordguessed="".join(listch)
-    return wordguessed
+    wordguessed = list(length* '*')
+    answer=list(answer)
+    wordguessed[guesses[0]] = answer[guesses[0]]
+    wordguessed[guesses[1]] = answer[guesses[1]]
+
+    return ''.join(wordguessed)
 
 def GameRound(no_attempts,word_to_show,word_to_guess,indecies_of_letters_to_show):
     print("Guess a Christmas or Codebar-related word. "+"You have %d no_attempts" % no_attempts)
@@ -65,26 +59,23 @@ def GameRound(no_attempts,word_to_show,word_to_guess,indecies_of_letters_to_show
             print("This is too long.give me a ONE single letter:    ")
         if guess =='Q':
             exit('Bbyyyee')
-    if word_to_guess.count(guess)>0:
-        hitIndecies=CheckLetter(word_to_guess,guess)
-        indecies_of_letters_to_show=indecies_of_letters_to_show+hitIndecies
-        word_to_show=ReplaceLetter(word_to_show,word_to_guess,indecies_of_letters_to_show)
-    new_word_and_indecies=[word_to_show,indecies_of_letters_to_show]
-    return(new_word_and_indecies)
+    if guess in word_to_guess:
+        hitIndecies = finding_indecies_to_replace(word_to_guess,guess)
+        indecies_of_letters_to_show = indecies_of_letters_to_show+hitIndecies
+        word_to_show = ReplaceLetter(word_to_show,word_to_guess,indecies_of_letters_to_show)
+
+    return word_to_show, indecies_of_letters_to_show
 
 
 def game_loop():
-    picked_word = PickWord(ChristmasWords)
-    word_to_guess=picked_word[0]
-    indecies_of_letters_to_show = picked_word[1]
+    word_to_guess, indecies_of_letters_to_show = PickWord(general_words)
+
     # Fill with indexes of valid correct_guessed_indexes
     # Populate with initial correct_guessed
     word_to_show = create_word_to_show(word_to_guess, indecies_of_letters_to_show)
     attempts=3*(len(word_to_guess)-1)
     while (attempts>0) and (not word_to_guess==word_to_show):
-        playround=GameRound(attempts,word_to_show,word_to_guess,indecies_of_letters_to_show)
-        word_to_show=playround[0]
-        indecies_of_letters_to_show=playround[1]
+        word_to_show, indecies_of_letters_to_show = GameRound(attempts,word_to_show,word_to_guess,indecies_of_letters_to_show)
         attempts=attempts-1
         if attempts==0:
             exit("Noo.You lost....the word was " + word_to_guess.upper())
