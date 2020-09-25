@@ -55,6 +55,7 @@ class Game:
         Show introduction text and instructions to user
         """
         user_response=str(0)
+        print("Welcome to hangman game")
         while (  not(user_response.lower() == 'y') and not(user_response.lower() == 'q') ):
             user_response = input("Would you like to play? If yes, press 'y'. Or for exit press 'q'.")
             if user_response.lower()=='q':
@@ -85,13 +86,12 @@ class Game:
         if self.word.is_complete():
             print('Hurray, you win. The word is '+self.word.my_word.upper())
         elif self.attempts==0:
-            print('Noo, you loose :-( The word was '+self.word.my_word.upper())
+            print('Noo, you loose :-(..But its not the end of the word. And besides..you can try again..??:-)')
 
 
 
 if __name__ == "__main__":
     print('--------------------------------------------------------------------------------------------------------------------------------')
-    print("Welcome to the best hangman game ever")
     while True:
         y=Game(general_words)
         y.run_game()
